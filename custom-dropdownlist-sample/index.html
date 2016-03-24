@@ -12,17 +12,20 @@
 			<div class="container">
 
 				<div id="handled-select-wrapper">
-					<input id="animationCheckbox1" type="checkbox" checked><b>Animation #1</b></input>
+					<input id="animationCheckbox1" type="checkbox"><b>Animation #1</b></input>
 		        	<select id="handled-select">
 			          <option>---</option>
 			          <option>Dog</option>
 			          <option>Cat</option>
 			          <option>Mouse</option>
+			          <option>Bike</option>
+			          <option>Hulk</option>
+			          <option>IE</option>
 			        </select>
 	        	</div>
 
 				<div id="handler-select-wrapper">
-					<input id="animationCheckbox2" type="checkbox" checked><b>Animation #2</b></input>
+					<input id="animationCheckbox2" type="checkbox"><b>Animation #2</b></input>
 					<select id="handler-select">
 			          <option>---</option>
 			          <option>open</option>
@@ -33,9 +36,15 @@
 			          <option>select item #1</option>
 			          <option>select item #2</option>
 			          <option>select item #3</option>
+			          <option>select item #4</option>
+			          <option>select item #5</option>
+			          <option>select item #6</option>
 			          <option>add image to item #1</option>
 			          <option>add image to item #2</option>
 			          <option>add image to item #3</option>
+			          <option>add image to item #4</option>
+			          <option>add image to item #5</option>
+			          <option>add image to item #6</option>
 			          <option>destroy</option>
 			        </select>
 				</div>
@@ -43,6 +52,8 @@
 					Output
 				</textarea>
 			</div>
+
+			<button>CLICK HERE</button>
         	
 			
 		<!-- jQuery if needed -->
@@ -51,16 +62,18 @@
 		<script>
 
 			 $('#handled-select').fancySelectBox({
-		        animation: true,
-		        height: 100
+		        animation: false,
+		        height: 200
 		      }).on('onBeforeOpen', function() {
 					$("#console").append($.now() + '     #1: onBeforeOpen has been called\n');
 					$("#console").scrollTop($("#console")[0].scrollHeight);
-				});;
+				})
+		      	.on('onAfterSelect');
 
 		      var selectBeingHandled = $('#handled-select').data('fancySelectBox');
 
-		      $('#animationCheckbox').change(function() {
+
+		      $('#animationCheckbox1').change(function() {
 		        if($(this).is(":checked")) {
 		            selectBeingHandled.animation(true);
 		        }
@@ -69,7 +82,7 @@
 		        }
 		      });
 
-		      $('#handler-select').fancySelectBox({
+		      var selectHandler = $('#handler-select').fancySelectBox({
 		        onSelect: function(index) {
 		            switch (index) {
 		                case 1: {
@@ -107,18 +120,42 @@
 		                    break;
 		                }
 		                case 9: {
-		                	selectBeingHandled.replaceLiTemplate("<li><img src='images/dog.png'></li>", 1);   
+		                    selectBeingHandled.select(4);
 		                    break;
 		                }
 		                case 10: {
+		                    selectBeingHandled.select(5);
+		                    break;
+		                }
+		                case 11: {
+		                    selectBeingHandled.select(6);
+		                    break;
+		                }
+		                case 12: {
+		                	selectBeingHandled.replaceLiTemplate("<li><img src='images/dog.png'></li>", 1);   
+		                    break;
+		                }
+		                case 13: {
 		                	selectBeingHandled.replaceLiTemplate("<li><img src='images/cat.png'></li>", 2); 
 		                	break;
 		                }
-		                case 11: {
+		                case 14: {
 		                	selectBeingHandled.replaceLiTemplate("<li><img src='images/mouse.jpg'></li>", 3); 
 		                	break;
 		                }
-		                case 12: {
+		                case 15: {
+		                	selectBeingHandled.replaceLiTemplate("<li><img src='images/bike.png'></li>", 4); 
+		                	break;
+		                }
+		                case 16: {
+		                	selectBeingHandled.replaceLiTemplate("<li><img src='images/hulk.png'></li>", 5); 
+		                	break;
+		                }
+		                case 17: {
+		                	selectBeingHandled.replaceLiTemplate("<li><img src='images/ie.png'></li>", 6); 
+		                	break;
+		                }
+		                case 18: {
 		                	selectBeingHandled.destroy();
 		                	break;
 		                }
@@ -130,7 +167,25 @@
 				.on('onBeforeOpen', function() {
 					$("#console").append($.now() + '       #2: onBeforeOpen has been called\n');
 					$("#console").scrollTop($("#console")[0].scrollHeight);
-				});
+				})
+
+				.data('fancySelectBox');
+
+
+			  $('#animationCheckbox2').change(function() {
+		        if($(this).is(":checked")) {
+		            selectHandler.animation(true);
+		        }
+		        else {
+		            selectHandler.animation(false);
+		        }
+		      });
+
+
+			  $('button').click(function() {
+			  	selectBeingHandled.refresh();
+			  });
+
 		</script>
     </body>
 </html>

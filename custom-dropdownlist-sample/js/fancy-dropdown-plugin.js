@@ -113,6 +113,37 @@
                   })
                 .appendTo(that.dropdownList);
   }
+
+  var generateListItemFromOriginSelect = function(that) {
+      // Refresh selectOptions in case some changes happend
+      that.selectOptions = that.originalSelect.find("option");
+      that.selectOptions.each(function(index, val) {
+          generateLiTemplate(that, that.options.liTemplate, index, $(this).html());
+        });
+  }
+
+  var generateDropdownList = function(that) {
+        
+        that.dropdownWrapper = $("<div></div>").addClass("dropdown-wrapper");
+        that.selectionPresenter = $("<div></div>").addClass("selection-presenter");
+        that.dropdownList = $("<ul></ul>").addClass("fancyDropdown");
+        
+        that.dropdownList.css("left", that.selectionPresenter.css("left"));
+      
+        generateListItemFromOriginSelect(that);
+
+        that.dropdownList.find("li").first().click();
+        
+        // Bind event to selectionPresenter
+        // When user click on selectionPresenter, the dropdown list will be toggled.
+        that.selectionPresenter.click(function(e) {
+          onSelectionPresenter(that, e);
+        });
+        
+        that.dropdownWrapper.append(that.selectionPresenter);
+        that.dropdownWrapper.append(that.dropdownList);
+       
+      }
     	
 
   function Plugin(element, options) {
@@ -131,36 +162,6 @@
     		}
     	});
 
-    	
-	    var generateDropdownList = function() {
-	  		
-		    that.dropdownWrapper = $("<div></div>").addClass("dropdown-wrapper");
-		    that.selectionPresenter = $("<div></div>").addClass("selection-presenter");
-		    that.dropdownList = $("<ul></ul>").addClass("fancyDropdown");
-		    
-		    that.dropdownList.css("left", that.selectionPresenter.css("left"));
-		    
-		    that.selectOptions.each(function(index, val) {
-		        //var liTemplate = $("<li data-option-id='" + index + "'>" + $(this).html() + "</li>" );
-		        var liTemplate = generateLiTemplate(that, that.options.liTemplate, index, $(this).html());
-
-		    });
-		    
-		    that.dropdownList.find("li").first().click();
-		    
-		    // Bind event to selectionPresenter
-		    // When user click on selectionPresenter, the dropdown list will be toggled.
-		    that.selectionPresenter.click(function(e) {
-		    	onSelectionPresenter(that, e);
-		    });
-		    
-		    that.dropdownWrapper.append(that.selectionPresenter);
-		    that.dropdownWrapper.append(that.dropdownList);
-		   
-	  }
-
-
-
       that.originalSelect = that.element;
       that.selectOptions = that.originalSelect.find("option");
       that.dropdownWrapper = null;
@@ -168,7 +169,7 @@
       that.dropdownList = null;
 
 
-      generateDropdownList();
+      generateDropdownList(that);
       that.originalSelect.after(that.dropdownWrapper);
       that.dropdownList.hide();
       that.originalSelect.hide();
@@ -249,6 +250,11 @@
         .children()
         .eq(liIndex)
         .replaceWith(generateLiTemplate(this, liTemplate, optionId, optionContent));
+    },
+    refresh: function() {
+      this.dropdownList.children().remove();
+      generateListItemFromOriginSelect(this);
+
     },
 
     destroy: function() {
